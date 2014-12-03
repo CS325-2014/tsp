@@ -49,18 +49,20 @@ class Block():
     # check to make sure we have a list of cities and not a grid
     if len(self.cities.shape) == 1:
       # random function goes here
-      best_path = pathfinder(self.cities)
-      return best_path
-
-  def pathfinder(self, cities):
-    # variable that contains the path and its length
-    path_order =() 
-    for i in range(0, 42):
-      path_order[i][0] = random.shuffle(self.cities)
-      path_order[i][1] = distance(path_order[i][0])
-
+      self.path = pathfinder(self.cities)
 
 # ---- [ tsp utility functions ] ----------------------------------------------
+
+def pathfinder(cities):
+  # variable that contains the path and its length
+  best_path = []
+  best_distance = sys.maxint
+  for i in range(0, 42):
+    random.shuffle(cities)
+    if best_distance > distance(cities):
+      best_path = cities.copy()
+      best_distance = distance(best_path)
+  return best_path
 
 def run(inputfile):
   with open(inputfile) as f:
