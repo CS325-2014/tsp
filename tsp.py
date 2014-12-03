@@ -10,7 +10,7 @@
 
 # ---- [ imports ] ------------------------------------------------------------
 
-import getopt, sys, re
+import getopt, sys
 
 # ---- [ globals ] ------------------------------------------------------------
 
@@ -20,8 +20,14 @@ outputfile = "tsp_grp3.txt"
 # ---- [ classes ] ------------------------------------------------------------
 
 class City():
-  def __init__(self):
-    print "TODO"
+  def __init__(self, line):
+    arr = line.split(' ')
+    self.id = str(arr[0])
+    self.x = int(arr[1])
+    self.y = int(arr[2])
+
+  def __repr__(self):
+    return "(" + str(self.x) + ", " + str(self.y) + ") - " + self.id
 
 # ---- [ utility functions ] --------------------------------------------------
 
@@ -63,9 +69,13 @@ def main(argv):
     f.close()
   except IOError:
     handle_error("failed to write to file, '{0}'."
-      .format(benchmarkfile))
+      .format(outputfile))
 
   # TODO - parse input file
+  with open(inputfile) as f:
+    arr = f.readlines()
+    cities = [City(x) for x in arr]
+    print cities
 
 if __name__ == "__main__":
     main(sys.argv[1:])
