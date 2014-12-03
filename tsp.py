@@ -98,7 +98,7 @@ def distance(cities):
 def pathfinder(cities):
   best_path = []
   best_distance = sys.maxint
-  for i in range(0, 42):
+  for i in range(0, len(cities) * len(cities)):
     random.shuffle(cities)
     if best_distance > distance(cities):
       best_path = cities.copy()
