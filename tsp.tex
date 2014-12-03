@@ -24,7 +24,7 @@
 \begin{titlepage}
     \vspace*{4cm}
     {\huge \center
-        CS 325 TSP Challenge Report\\[1cm]
+        CS 325 Traveling Salesman Report\\[1cm]
     }
     \center
     {\large
@@ -39,5 +39,49 @@
     }
 
 \end{titlepage}
+
+\section*{Introduction}
+
+The Travelling Salesman Problem, TSP, is a classic problem that asks: Given a set of cities and distances between those cities, find the shortest possible loop that visits every city. The TSP is an NP-Hard problem that has a brute force running time of $O(n!)$, which is obviously unacceptable for us. Instead of finding an optimal solution, we will be finding "good" solutions that are found much quicker.
+
+Our TSP algorithm finds close to optimal solutions through a combination of random permutations, divide and conquer, and (random swaps). The cities are divided into groups based on grid proximity and then random solutions are generated in each isolated grid. Once the best solutions are found, they are joined with random permutations. Lastly, the solution is improved through random swaps that are committed if the distance is shortened, but discarded if not.
+
+
+
+\section*{Random Permutations}
+
+A core part of our algorithm for the TSP is to simply create a random order of cities to be visited. While random luck is rarely a good idea, we can reduce the likelyhood of bad solutions by running lots of random solutions and selecting the one that has the shortest path. 
+
+
+\section*{Divide and Conquer}
+
+One of the major difficulties of the TSP, is that optimal solution algorithms quickly become infeasible as the number of cities increase. Now, our algorithm is not optimal, but it can still be slowed down by sets of tens of thousands of cities. By applying a divide and conquer method to the TSP, we can process larger sets of cities faster.
+
+As the algorithm reads in the cities of the TSP, we create an initial grid of 5x5 to separate the cities into smaller groups. However, the cities may be densely grouped, so if any individual block contains more than a specific amount $Threshold$, then we divide that block into another 5x5 grid. We continue this until we have a number of subproblems that are no larger than $Threshold$. 
+
+\section*{Random Swap Improvements}
+
+
+\textsc{HValue}(H, i, j):
+\begin{algorithmic}
+\If {i < 0 or j <    0}
+    \State \Return 0
+\Else
+    \State \Return H[i][j]
+\EndIf
+\end{algorithmic}
+
+\textsc{Heuristic}(grid, i, j):
+\begin{algorithmic}
+\State $H \gets$ Array2D()
+\For{y = 0 to j}
+    \For{x = 0 to i}
+        \State H[x][y] $\gets$ grid[x][y] + $\max \{$ \textsc{HValue}(H, i-1, j), \textsc{HValue}(H, i, j-1), 0  $\}$
+    \EndFor
+\EndFor
+\State \Return H
+\end{algorithmic}
+
+\newpage
 
 \end{document}
