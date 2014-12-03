@@ -39,7 +39,9 @@ class Block():
     self.cities = []
 
   def __repr__(self):
-    if len(self.cities) > 0 and not isinstance(self.cities[0], list):
+    if len(self.cities) == 0:
+      return "0"
+    if not isinstance(self.cities[0], list):
       return str(len(self.cities))
     return str(self.cities)
 
@@ -50,7 +52,6 @@ class Block():
   def compute_path(self):
     # check to make sure we have a list of cities and not a grid
     if not isinstance(self.cities[0], list):
-      # random function goes here
       self.path = pathfinder(self.cities)
 
 # ---- [ tsp utility functions ] ----------------------------------------------
