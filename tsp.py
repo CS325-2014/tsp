@@ -60,14 +60,11 @@ class Block():
   def compute_path(self):
     if not isinstance(self.cities[0], list):
       self.path = pathfinder(self.cities)
-      print self.path
     else:
       blocks = filter(lambda x: x.size() > 0, sum(self.cities, []))
       for block in blocks:
-        if isinstance(block.cities[0], list):
-          block.compute_path()
+        block.compute_path()
       self.path = pathfinder(blocks)
-      print self.path
 
 # ---- [ tsp utility functions ] ----------------------------------------------
 
@@ -79,6 +76,24 @@ def run(inputfile):
     block.finalize()
     #print block
     block.compute_path()
+    path = get_path(block)
+    print path
+    print distance(path)
+
+def get_path(block):
+  path = []
+  if isinstance(block, City):
+    return [block]
+  if isinstance(block, list):
+    if isinstance(block[0], City):
+      return block
+    else:
+      for el in block:
+        path.extend(get_path(el))
+      return path
+  for el in block.path:
+    path.extend(get_path(el))
+  return path
 
 def partition(cities):
   max_x = max([city.x for city in cities])
