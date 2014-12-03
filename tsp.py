@@ -14,8 +14,8 @@ import getopt, sys, math, random
 
 # ---- [ constants ] ----------------------------------------------------------
 
-THRESHOLD = 7
-GRID_SIZE = 10
+THRESHOLD = 6
+GRID_SIZE = 5
 
 # ---- [ globals ] ------------------------------------------------------------
 
@@ -39,7 +39,9 @@ class Block():
     self.cities = []
 
   def __repr__(self):
-    return str(len(self.cities))
+    if len(self.cities) > 0 and not isinstance(self.cities[0], list):
+      return str(len(self.cities))
+    return str(self.cities)
 
   def finalize(self):
     if len(self.cities) > THRESHOLD:
@@ -47,22 +49,11 @@ class Block():
 
   def compute_path(self):
     # check to make sure we have a list of cities and not a grid
-    if len(self.cities.shape) == 1:
+    if not isinstance(self.cities[0], list):
       # random function goes here
       self.path = pathfinder(self.cities)
 
 # ---- [ tsp utility functions ] ----------------------------------------------
-
-def pathfinder(cities):
-  # variable that contains the path and its length
-  best_path = []
-  best_distance = sys.maxint
-  for i in range(0, 42):
-    random.shuffle(cities)
-    if best_distance > distance(cities):
-      best_path = cities.copy()
-      best_distance = distance(best_path)
-  return best_path
 
 def run(inputfile):
   with open(inputfile) as f:
@@ -70,6 +61,7 @@ def run(inputfile):
     block = Block()
     block.cities = [City(x) for x in arr]
     block.finalize()
+    print block
 
 def partition(cities):
   max_x = max([city.x for city in cities])
@@ -92,7 +84,7 @@ def partition(cities):
     for block in block_row:
       block.finalize()
 
-  print blocks
+  return blocks
 
 def distance(cities):
   if len(cities) == 2:
@@ -102,6 +94,16 @@ def distance(cities):
   for i in range(0, len(cities) - 1):
     total += distance([cities[i], cities[i + 1]])
   return total
+
+def pathfinder(cities):
+  best_path = []
+  best_distance = sys.maxint
+  for i in range(0, 42):
+    random.shuffle(cities)
+    if best_distance > distance(cities):
+      best_path = cities.copy()
+      best_distance = distance(best_path)
+  return best_path
 
 # ---- [ general utility functions ] ------------------------------------------
 
