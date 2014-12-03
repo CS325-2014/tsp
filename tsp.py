@@ -16,6 +16,7 @@ import getopt, math, random, re, sys
 
 THRESHOLD = 6
 GRID_SIZE = 5
+SPEED_CONSTANT = 3
 
 # ---- [ globals ] ------------------------------------------------------------
 
@@ -55,6 +56,7 @@ class Block():
 
   def finalize(self):
     if len(self.cities) > THRESHOLD:
+      print self.cities
       self.cities = partition(self.cities)
 
   def compute_path(self):
@@ -75,7 +77,6 @@ def run(inputfile):
     block = Block()
     block.cities = [City(x) for x in arr]
     block.finalize()
-    #print block
     block.compute_path()
     path = get_path(block)
     dist = distance(path) + distance([path[0], path[-1]])
@@ -100,18 +101,20 @@ def get_path(block):
   return path
 
 def partition(cities):
+  min_x = min([city.x for city in cities])
+  min_y = min([city.y for city in cities])
   max_x = max([city.x for city in cities])
   max_y = max([city.y for city in cities])
 
-  x_step = int(max_x / GRID_SIZE)
-  y_step = int(max_y / GRID_SIZE)
+  x_step = int((max_x - min_x) / GRID_SIZE)
+  y_step = int((max_y - min_y) / GRID_SIZE)
 
   blocks = [[Block() for x in range(GRID_SIZE)]
     for x in range(GRID_SIZE)]
 
   for city in cities:
-    x = min(int(city.x/x_step), GRID_SIZE - 1)
-    y = min(int(city.y/y_step), GRID_SIZE - 1)
+    x = min(int((city.x - min_x)/x_step), GRID_SIZE - 1)
+    y = min(int((city.y - min_y)/y_step), GRID_SIZE - 1)
     blocks[x][y].cities.append(city)
     blocks[x][y].x = x
     blocks[x][y].y = y
@@ -134,7 +137,7 @@ def distance(cities):
 def pathfinder(cities):
   best_path = []
   best_distance = sys.maxint
-  for i in range(0, len(cities) ** 2):
+  for i in range(0, len(cities) ** SPEED_CONSTANT):
     random.shuffle(cities)
     if best_distance > distance(cities):
       best_path = cities[:]
