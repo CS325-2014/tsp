@@ -60,9 +60,14 @@ class Block():
   def compute_path(self):
     if not isinstance(self.cities[0], list):
       self.path = pathfinder(self.cities)
+      print self.path
     else:
-      cities = filter(lambda x: x.size() > 0, sum(self.cities, []))
-      print cities
+      blocks = filter(lambda x: x.size() > 0, sum(self.cities, []))
+      for block in blocks:
+        if isinstance(block.cities[0], list):
+          block.compute_path()
+      self.path = pathfinder(blocks)
+      print self.path
 
 # ---- [ tsp utility functions ] ----------------------------------------------
 
@@ -113,7 +118,7 @@ def pathfinder(cities):
   for i in range(0, len(cities) * len(cities)):
     random.shuffle(cities)
     if best_distance > distance(cities):
-      best_path = cities.copy()
+      best_path = cities[:]
       best_distance = distance(best_path)
   return best_path
 
