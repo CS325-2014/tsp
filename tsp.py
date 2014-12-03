@@ -12,6 +12,10 @@
 
 import getopt, sys
 
+# ---- [ constants ] ----------------------------------------------------------
+
+GRID_SIZE = 10
+
 # ---- [ globals ] ------------------------------------------------------------
 
 debug = False
@@ -29,7 +33,38 @@ class City():
   def __repr__(self):
     return "(" + str(self.x) + ", " + str(self.y) + ") - " + self.id
 
-# ---- [ utility functions ] --------------------------------------------------
+class Block():
+  def __init__(self):
+    self.cities = []
+
+  def __repr__(self):
+    return str(len(self.cities))
+
+# ---- [ tsp utility functions ] ----------------------------------------------
+
+def run(inputfile):
+  with open(inputfile) as f:
+    arr = f.readlines()
+    cities = [City(x) for x in arr]
+    partition(cities)
+
+def partition(cities):
+  max_x = max([city.x for city in cities])
+  max_y = max([city.y for city in cities])
+
+  x_step = int(max_x/GRID_SIZE)
+  y_step = int(max_y/GRID_SIZE)
+
+  blocks = [[Block() for x in range(GRID_SIZE)] for x in range(GRID_SIZE)]
+
+  for city in cities:
+    x = min(int(city.x/x_step), GRID_SIZE - 1)
+    y = min(int(city.y/y_step), GRID_SIZE -1)
+    blocks[x][y].cities.append(city)
+
+  print blocks
+
+# ---- [ general utility functions ] ------------------------------------------
 
 def handle_error(message):
   print "Error: {0}".format(message)
@@ -71,11 +106,7 @@ def main(argv):
     handle_error("failed to write to file, '{0}'."
       .format(outputfile))
 
-  # TODO - parse input file
-  with open(inputfile) as f:
-    arr = f.readlines()
-    cities = [City(x) for x in arr]
-    print cities
+  run(inputfile)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
