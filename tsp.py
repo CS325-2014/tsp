@@ -14,6 +14,7 @@ import getopt, sys
 
 # ---- [ constants ] ----------------------------------------------------------
 
+THRESHOLD = 7
 GRID_SIZE = 10
 
 # ---- [ globals ] ------------------------------------------------------------
@@ -36,31 +37,45 @@ class City():
 class Block():
   def __init__(self):
     self.cities = []
+    self.x = -1
+    self.y = -1
 
   def __repr__(self):
     return str(len(self.cities))
+
+  def finalize(self):
+    if len(self.cities) > THRESHOLD:
+      self.cities = partition(self.cities)
 
 # ---- [ tsp utility functions ] ----------------------------------------------
 
 def run(inputfile):
   with open(inputfile) as f:
     arr = f.readlines()
-    cities = [City(x) for x in arr]
-    partition(cities)
+    block = Block()
+    block.cities = [City(x) for x in arr]
+    block.finalize()
 
 def partition(cities):
   max_x = max([city.x for city in cities])
   max_y = max([city.y for city in cities])
 
-  x_step = int(max_x/GRID_SIZE)
-  y_step = int(max_y/GRID_SIZE)
+  x_step = int(max_x / GRID_SIZE)
+  y_step = int(max_y / GRID_SIZE)
 
-  blocks = [[Block() for x in range(GRID_SIZE)] for x in range(GRID_SIZE)]
+  blocks = [[Block() for x in range(GRID_SIZE)]
+    for x in range(GRID_SIZE)]
 
   for city in cities:
     x = min(int(city.x/x_step), GRID_SIZE - 1)
-    y = min(int(city.y/y_step), GRID_SIZE -1)
+    y = min(int(city.y/y_step), GRID_SIZE - 1)
     blocks[x][y].cities.append(city)
+    blocks[x][y].x = x
+    blocks[x][y].y = y
+
+  for block_row in blocks:
+    for block in block_row:
+      block.finalize()
 
   print blocks
 
