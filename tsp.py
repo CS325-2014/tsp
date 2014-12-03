@@ -10,7 +10,7 @@
 
 # ---- [ imports ] ------------------------------------------------------------
 
-import getopt, sys
+import getopt, sys, random
 
 # ---- [ constants ] ----------------------------------------------------------
 
@@ -46,6 +46,21 @@ class Block():
   def finalize(self):
     if len(self.cities) > THRESHOLD:
       self.cities = partition(self.cities)
+
+  def compute_path(self):
+    # check to make sure we have a list of cities and not a grid
+    if len(self.cities.shape) == 1:
+      # random function goes here
+      best_path = pathfinder(self.cities)
+      return best_path
+
+  def pathfinder(self, cities):
+    # variable that contains the path and its length
+    path_order =() 
+    for i in range(0, 42):
+      path_order[i][0] = random.shuffle(self.cities)
+      path_order[i][1] = distance(path_order[i][0])
+
 
 # ---- [ tsp utility functions ] ----------------------------------------------
 
