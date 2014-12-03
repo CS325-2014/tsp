@@ -10,7 +10,7 @@
 
 # ---- [ imports ] ------------------------------------------------------------
 
-import getopt, sys, math, random
+import getopt, math, random, re, sys
 
 # ---- [ constants ] ----------------------------------------------------------
 
@@ -26,7 +26,7 @@ outputfile = "tsp_grp3.txt"
 
 class City():
   def __init__(self, line):
-    arr = line.split(' ')
+    arr = re.sub(r"\s+", " ", line).strip().split(' ')
     self.id = str(arr[0])
     self.x = int(arr[1])
     self.y = int(arr[2])
@@ -69,6 +69,7 @@ class Block():
 # ---- [ tsp utility functions ] ----------------------------------------------
 
 def run(inputfile):
+  global outputfile
   with open(inputfile) as f:
     arr = f.readlines()
     block = Block()
@@ -77,8 +78,11 @@ def run(inputfile):
     #print block
     block.compute_path()
     path = get_path(block)
-    print path
-    print distance(path)
+    dist = distance(path) + distance([path[0], path[-1]])
+    f = open(outputfile, "w+")
+    f.write(str(int(dist)) + "\n")
+    for city in path:
+      f.write(city.id + "\n")
 
 def get_path(block):
   path = []
@@ -130,7 +134,7 @@ def distance(cities):
 def pathfinder(cities):
   best_path = []
   best_distance = sys.maxint
-  for i in range(0, len(cities) * len(cities)):
+  for i in range(0, len(cities) ** 2):
     random.shuffle(cities)
     if best_distance > distance(cities):
       best_path = cities[:]
