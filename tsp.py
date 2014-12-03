@@ -56,7 +56,6 @@ class Block():
 
   def finalize(self):
     if len(self.cities) > THRESHOLD:
-      print self.cities
       self.cities = partition(self.cities)
 
   def compute_path(self):

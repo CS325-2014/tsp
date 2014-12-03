@@ -42,7 +42,7 @@
 
 \section*{Introduction}
 
-The Travelling Salesman Problem, TSP, is a classic problem that asks: Given a set of cities and distances between those cities, find the shortest possible loop that visits every city. The TSP is an NP-Hard problem that has a brute force running time of $O(n!)$, which is obviously unacceptable for us. Instead of finding an optimal solution, we will be finding "good" solutions that are found much quicker.
+The Travelling Salesman Problem (TSP) is a classic problem that asks: Given a set of cities and distances between those cities, find the shortest possible loop that visits every city. The TSP is an NP-Hard problem that has a brute force running time of $O(n!)$, which is obviously unacceptable for us. Instead of finding an optimal solution, we will be finding "good" solutions that are found much quicker.
 
 Our TSP algorithm finds close to optimal solutions through a combination of random permutations, divide and conquer, and (random swaps). The cities are divided into groups based on grid proximity and then random solutions are generated in each isolated grid. Once the best solutions are found, they are joined with random permutations. Lastly, the solution is improved through random swaps that are committed if the distance is shortened, but discarded if not.
 
@@ -55,12 +55,12 @@ A core part of our algorithm for the TSP is to simply create a random order of c
 
 \section*{Divide and Conquer}
 
-One of the major difficulties of the TSP, is that optimal solution algorithms quickly become infeasible as the number of cities increase. Now, our algorithm is not optimal, but it can still be slowed down by sets of tens of thousands of cities. By applying a divide and conquer method to the TSP, we can process larger sets of cities faster.
+One of the major difficulties of the TSP, is that optimal solution algorithms quickly become infeasible as the number of cities increase. Our algorithm is not optimal, but it can still be slowed down by sufficiently large sets of cities. By applying a divide and conquer method to the TSP, we can process larger sets of cities faster.
 
 As the algorithm reads in the cities of the TSP, we create an initial grid of 5x5 to separate the cities into smaller groups. However, the cities may be densely grouped, so if any individual block contains more than a specific amount $Threshold$, then we divide that block into another 5x5 grid. We continue this until we have a number of subproblems that are no larger than $Threshold$. 
 
 \section*{Random Swap Improvements}
-
+Our algorithm uses smart randomization by taking each subdivided block and running random comparisons on them to attempt to find a short path. Of course, this won't find the optimum path, but it will get us close in most cases, and we may even get lucky once in awhile. We calculate $n^3$ random paths, where n is the number of cities in a given grid block. Next, we take the minimum value returned by that calculation and return that path to be connected to other short paths. From there, we can connect larger blocks to each other using the same method which treats each connected block as an individual city. This is repeated until all cities are connected.
 
 \textsc{HValue}(H, i, j):
 \begin{algorithmic}
