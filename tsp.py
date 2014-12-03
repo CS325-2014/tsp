@@ -10,7 +10,7 @@
 
 # ---- [ imports ] ------------------------------------------------------------
 
-import getopt, sys, random
+import getopt, sys, math, random
 
 # ---- [ constants ] ----------------------------------------------------------
 
@@ -37,8 +37,6 @@ class City():
 class Block():
   def __init__(self):
     self.cities = []
-    self.x = -1
-    self.y = -1
 
   def __repr__(self):
     return str(len(self.cities))
@@ -93,6 +91,15 @@ def partition(cities):
       block.finalize()
 
   print blocks
+
+def distance(cities):
+  if len(cities) == 2:
+    return math.sqrt(math.pow((cities[0].y - cities[1].y), 2)
+     + math.pow((cities[0].x - cities[1].x), 2))
+  total = 0
+  for i in range(0, len(cities) - 1):
+    total += distance([cities[i], cities[i + 1]])
+  return total
 
 # ---- [ general utility functions ] ------------------------------------------
 
