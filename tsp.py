@@ -45,6 +45,14 @@ class Block():
       return str(len(self.cities))
     return str(self.cities)
 
+  def size(self):
+    if len(self.cities) == 0:
+      return 0
+    if not isinstance(self.cities[0], list):
+      return len(self.cities)
+    else:
+      return len(sum(self.cities, []))
+
   def finalize(self):
     if len(self.cities) > THRESHOLD:
       self.cities = partition(self.cities)
@@ -52,6 +60,9 @@ class Block():
   def compute_path(self):
     if not isinstance(self.cities[0], list):
       self.path = pathfinder(self.cities)
+    else:
+      cities = filter(lambda x: x.size() > 0, sum(self.cities, []))
+      print cities
 
 # ---- [ tsp utility functions ] ----------------------------------------------
 
@@ -61,7 +72,8 @@ def run(inputfile):
     block = Block()
     block.cities = [City(x) for x in arr]
     block.finalize()
-    print block
+    #print block
+    block.compute_path()
 
 def partition(cities):
   max_x = max([city.x for city in cities])
