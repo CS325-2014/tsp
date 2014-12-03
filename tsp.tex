@@ -59,8 +59,11 @@ One of the major difficulties of the TSP, is that optimal solution algorithms qu
 
 As the algorithm reads in the cities of the TSP, we create an initial grid of 5x5 to separate the cities into smaller groups. However, the cities may be densely grouped, so if any individual block contains more than a specific amount $Threshold$, then we divide that block into another 5x5 grid. We continue this until we have a number of subproblems that are no larger than $Threshold$. 
 
-\section*{Random Swap Improvements}
+\section*{Random Swap Minimization}
 Our algorithm uses smart randomization by taking each subdivided block and running random comparisons on them to attempt to find a short path. Of course, this won't find the optimum path, but it will get us close in most cases, and we may even get lucky once in awhile. We calculate $n^3$ random paths, where n is the number of cities in a given grid block. Next, we take the minimum value returned by that calculation and return that path to be connected to other short paths. From there, we can connect larger blocks to each other using the same method which treats each connected block as an individual city. This is repeated until all cities are connected.
+
+\section*{Shortest Path Improvability}
+It is worth mentioning that we wrote our code in a way such that our "pathfinder" function can be replaced with any function that can determine the shortest path of a graph, and the code will run the same way, and quite possibly faster. That being said, it would be incredibly simple to find some MST library or shortest path implementation (such as Bor\r{u}vka's Algorithm, as we discussed in our presentation) and use that in place of the pathfinder function we wrote.
 
 \textsc{HValue}(H, i, j):
 \begin{algorithmic}
