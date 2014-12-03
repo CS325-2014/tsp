@@ -50,7 +50,6 @@ class Block():
       self.cities = partition(self.cities)
 
   def compute_path(self):
-    # check to make sure we have a list of cities and not a grid
     if not isinstance(self.cities[0], list):
       self.path = pathfinder(self.cities)
 
