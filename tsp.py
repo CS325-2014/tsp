@@ -5,7 +5,8 @@
 # Note:
 # Opts: -i, --inputfile     : specify input file (defaults to "test.txt")
 #       -o, --outputfile    : specify output file for results
-#       -d, --debug           : show debug messages
+#       -s, --speedconstant : specify speed constant
+#       -d, --debug         : show debug messages
 #-----------------------------------------------------------------------------#
 
 # ---- [ imports ] ------------------------------------------------------------
@@ -16,12 +17,12 @@ import getopt, math, random, re, sys
 
 THRESHOLD = 6
 GRID_SIZE = 5
-SPEED_CONSTANT = 3
 
 # ---- [ globals ] ------------------------------------------------------------
 
 debug = False
 outputfile = "tsp_grp3.txt"
+speed_constant = 3
 
 # ---- [ classes ] ------------------------------------------------------------
 
@@ -56,7 +57,6 @@ class Block():
 
   def finalize(self):
     if len(self.cities) > THRESHOLD:
-      print self.cities
       self.cities = partition(self.cities)
 
   def compute_path(self):
@@ -82,6 +82,7 @@ def run(inputfile):
     dist = distance(path) + distance([path[0], path[-1]])
     f = open(outputfile, "w+")
     f.write(str(int(dist)) + "\n")
+    print str(int(dist))
     for city in path:
       f.write(city.id + "\n")
 
@@ -135,9 +136,10 @@ def distance(cities):
   return total
 
 def pathfinder(cities):
+  global speed_constant
   best_path = []
   best_distance = sys.maxint
-  for i in range(0, len(cities) ** SPEED_CONSTANT):
+  for i in range(0, len(cities) ** speed_constant):
     random.shuffle(cities)
     if best_distance > distance(cities):
       best_path = cities[:]
@@ -158,11 +160,11 @@ def debug_message(message):
 # ---- [ main ] ---------------------------------------------------------------
 
 def main(argv):
-  global debug, outputfile
+  global debug, outputfile, speed_constant
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], 'i:o:d',
-      ['inputfile=', 'outputfile=', 'debug'])
+    opts, args = getopt.getopt(sys.argv[1:], 'i:o:s:d',
+      ['inputfile=', 'outputfile=', 'speedconstant=', 'debug'])
   except getopt.GetoptError as err:
     handle_error(str(err))
 
@@ -173,6 +175,8 @@ def main(argv):
       inputfile = a
     elif o in ['-o', '--outputfile']:
       outputfile = a
+    elif o in ['-s', '--speedconstant']:
+      speed_constant = int(a)
     elif o in ['-d', '--debug']:
       debug = True
     else:
