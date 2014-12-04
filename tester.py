@@ -1,10 +1,8 @@
 import os, time
 
-print '"Speed Constant","Average Result","Average Execution Time(s)"'
-
 f = open("results.csv", "w+")
 for s in range(1, 6):
-  count = 100
+  count = 10
   result = 0
   seconds = 0
   for _ in range(0, count):

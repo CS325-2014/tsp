@@ -56,15 +56,19 @@ This idea was, to some extent, inspired by Group 18's approach using random neig
 
 One of the major difficulties of the TSP is that optimal solution algorithms quickly become more difficult to find as the number of cities increase ($n!$ grows quickly). Applying only the idea of random permutations to a large set of cities isn't plausible because it would require an even larger number of random permutations. By applying a divide and conquer method, we can process larger sets of cities faster.
 
-As the algorithm reads in the cities of the TSP, we create an initial grid of $5 \times 5$ to separate the cities into smaller groups. However, the cities may be densely grouped, so if any individual block contains more than a specific amount threshold, $T$, then we divide that block into another $5 \times 5$ grid. We continue this until we have a number of subproblems that are no larger than $T$. This method makes use of the fact that the random permutations method is far more effective with smaller sets of cities.
+As the algorithm reads in the cities of the TSP, we create an initial grid of $5 \times 5$ to separate the cities into smaller groups. However, the cities may be densely grouped, so if any individual block contains more than a specific threshold, $T$, then we divide that block into another $5 \times 5$ grid. Subdivisions continue recursively until the threshold is satisfied. This method makes use of the fact that the random permutations method is far more effective with smaller sets of cities.
 
 \section*{Divide and Conquer With Randomized Assembly}
 
-Once our algorithm has divided the problem into a number of smaller subproblems, the randomized path trials begin in each block. We will calculate $n^S$ random paths, where n is the number of cities in a given grid block. Next, we take the minimum path found and return that path to be connected to the other shortest paths found in the other blocks. Once all of the shortest paths have been found, randomized path trials are again used to connect the blocks to other blocks by treating the subpaths as individual cities, and then those are in turn connected to even larger blocks until all the cities are connected in a tour.
+Once our algorithm has divided the problem into a number of smaller subproblems, the randomized path trials begin in each block. We will calculate $n^S$ random paths, where $n$ is the number of cities in a given grid block. Next, we take the minimum path found and return that path to be connected to the other shortest paths found in the other blocks. Once all of the shortest paths have been found, randomized path trials are again used to connect the blocks to other blocks by treating the subpaths as individual cities, and then those are in turn connected to even larger blocks until all the cities are connected in a tour.
+
+We used $S=3$ because in our testing, it seemed as though 3 is the best compromise between decent results and fast execution time. Below is a graph that shows these variables for example input 1 (76 cities). We can see that the average (out of 100 tests) result (path length) decreases as $S$ increases, but after $S=3$, we don't get as much benefit from the higher execution time.
+
+\includegraphics[height=190pt]{fig1.pdf}
 
 \section*{Shortest Path Improvability}
 
-It is worth mentioning that we wrote our code in a way such that our "pathfinder" function can be replaced with any function that can determine the shortest path of a graph, and the code will still work just the same. That being said, it would likely be fairly simple to find some MST library or shortest path implementation (such as Bor\r{u}vka's Algorithm, as we discussed in our presentation) and use that in place of the pathfinder function we wrote.
+We wrote our code in a way such that our "pathfinder" function can be replaced with any function that can determine the shortest path of a graph, and the code will still work just the same using our divide and conquer pattern. It would likely be fairly simple to find some MST library or shortest path implementation (such as Bor\r{u}vka's Algorithm, as we discussed in our presentation) and use that in place of the pathfinder function we wrote.
 
 \newpage
 
