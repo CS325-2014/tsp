@@ -73,7 +73,7 @@ class Block():
 def run(inputfile):
   global outputfile
   with open(inputfile) as f:
-    arr = f.readlines()
+    arr = filter(lambda x: len(x) > 1, f.readlines())
     block = Block()
     block.cities = [City(x) for x in arr]
     block.finalize()
@@ -109,6 +109,11 @@ def partition(cities):
 
   x_step = int((max_x - min_x) / GRID_SIZE)
   y_step = int((max_y - min_y) / GRID_SIZE)
+
+  if x_step == 0:
+    x_step = 1
+  if y_step == 0:
+    y_step = 1
 
   blocks = [[Block() for x in range(GRID_SIZE)]
     for x in range(GRID_SIZE)]
